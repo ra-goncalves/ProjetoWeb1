@@ -65,6 +65,7 @@ router.post('/cadastrar_admin', async (req, res) => {
 })
 
 // router.post('/logar', async (req, res) => {
+
 //     const login = req.login,
 //           password = req.password
 
