@@ -2,6 +2,7 @@ let express = require('express'),
     router = express.Router(),
     Users = require('../models/Users'),
     Noticias = require('../models/Noticias'),
+    bodyParser = require('body-parser'),
     upload = require('../models/Uploads'),
     session = require('express-session')
 
@@ -11,6 +12,8 @@ router.use(session({
     saveUninitialized: true,
     cookie: {secure: false}
 }))
+
+router.use(bodyParser.json());
 
 router.get('/', async (req, res) => {
     if (req.session && req.session.login){
@@ -26,7 +29,6 @@ router.get('/', async (req, res) => {
     } else {
         //console.log('\n -> Requisição de acesso não possui variável de session.login')
         //console.log(req.session)
-        res.render('login')
     }
 });
 
@@ -62,25 +64,42 @@ router.post('/cadastrar_admin', async (req, res) => {
     }
 })
 
+// router.post('/logar', async (req, res) => {
+//     const login = req.login,
+//           password = req.password
+
+//     if (await Users.find(login, password)) {
+//         req.session.login = login
+//         req.session.username = await Users.getUsername(login)
+//         //console.log(`Variável de session.login criada -> ${req.session.login}`)
+//         if (await Users.checkType(login) == 'admin') {
+//             req.session.userTypeAdmin = true
+//         }
+//         // Exibir mensagem de sucesso antes de redirecionar para index
+//         res.redirect('/')
+//     } else {
+//         console.log('Erro ao logar.')
+//         res.status(403)
+//         res.end()
+//     }
+// })
+
 router.post('/logar', async (req, res) => {
     const login = req.body.login,
           password = req.body.password
-
+  
     if (await Users.find(login, password)) {
-        req.session.login = login
-        req.session.username = await Users.getUsername(login)
-        //console.log(`Variável de session.login criada -> ${req.session.login}`)
-        if (await Users.checkType(login) == 'admin') {
-            req.session.userTypeAdmin = true
-        }
-        // Exibir mensagem de sucesso antes de redirecionar para index
-        res.redirect('/')
+      req.session.login = login;
+      req.session.username = await Users.getUsername(login);
+      if (await Users.checkType(login) == 'admin') {
+        req.session.userTypeAdmin = true;
+      }
+      res.status(200).send({ success: true });
     } else {
-        console.log('Erro ao logar.')
-        res.status(403)
-        res.end()
+      console.log('Erro ao logar.');
+      res.status(403).end();
     }
-})
+  });
 
 router.post('/cadastrar_noticia', upload.single('image'), async (req, res) => {
     if (req.file) {

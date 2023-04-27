@@ -1,0 +1,1158 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300&family=Quicksand:wght@500;600&display=swap');
+
+@font-face {
+    font-family: 'BrownBold';
+    src: url('./fonts/BrownBold.ttf');
+}
+
+@font-face {
+    font-family: 'BrownLight';
+    src: url('./fonts/BrownLight.ttf');
+}
+
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 500;
+  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v107/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzazHD_dY43zj-jCxv3fzvRNU22ZXGJpEpjC_1n-q_4MrImHCIJIZrDCdHOej.woff2) format('woff2');
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    flex: 100%;
+    height: 48px;
+    padding: 0px 40px;
+    max-width: 800px;
+}
+
+header > a {
+    padding: 15px 0px;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'BrownLight';
+    color: #697172;
+    font-size: 14px;
+}
+
+header > a::after {
+    content: ' ∨';
+    color: #697172;
+    padding: 4px;
+}
+
+main {
+    background-image: url("./imgs/signature-k650.webp");
+    background-size: 108%;
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: relative;
+    height: 717px;
+    width: 100%;
+    min-height: 717px;
+}
+
+main > nav {
+    padding: 0px 40px;
+    height: 90px;
+}
+
+#headnav {
+    height: 100%;
+    display: flex;
+}
+
+#logo {
+    background-image: url(./imgs/logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 90px;
+    display: inline-block;
+    margin-right: 20px;
+    max-width: 183px;
+    min-width: 130px;
+}
+
+#navmenu {    
+    width: calc(66.66667% - 20px);
+    margin: 0px 20px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: white;    
+}
+
+#navmenu > a {
+    color: white;
+    font: 15px BrownBold, helvatica, arial, sans-serif;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+#navmenu > a:hover {
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    transition-duration: 0.2s;
+}
+
+#navbtn {
+    margin-right: 20px;
+    width: calc(16.66667% - 20px);
+    margin-right: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#navbtn button {
+    background-color: transparent;
+    border-style: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#navbtn button:hover {
+    cursor: pointer;
+}
+
+#navbtn > a {
+    margin-right: -16px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main > div > h2 {
+    font-family: 'BrownBold';
+    color: white;
+    font-size: 48px;
+    text-align: center;
+    text-transform: uppercase;
+    padding-top: 227px;
+    padding-bottom: 11px;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+main > div > p {
+    font-family: 'BrownLight';
+    color: white;
+    font-size: 23px;
+    text-align: center;    
+    margin-bottom: 32px;
+}
+
+#mainAnuncio {
+    padding-bottom: 100px;
+    margin-top: 50px;
+    margin: 50px auto;
+}
+
+#btnAnuncio {
+    background-color: white;
+    display: block;
+    margin: auto;
+    width: 215px;
+    padding: 18px 36px;
+    text-decoration: none;
+}
+
+#btnAnuncio > span {    
+    font-family: 'BrownBold';
+    font-size: 14px;    
+    color: #2F3132;
+    text-align: center;   
+    width: 100%;
+    height: 100%;
+    text-transform: uppercase;
+}
+
+#btnAnuncio:hover {
+    border: 2px solid white ;
+    transition-duration: 0.3s;
+    background-color: transparent;
+    padding: 16px 36px;
+}
+
+#btnAnuncio:hover > span {
+    color: white;
+}
+
+.chat{
+    position: fixed;
+    bottom: 40px;
+    right: 6px;
+    max-width: 58px;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    padding-right: 15px;
+}
+
+.chat:hover{
+    cursor: pointer;
+}
+
+.local a{
+    margin-right: 40px;
+    color: #697172;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    position: absolute;
+    top: 12px;
+    right: 6px;
+}
+
+.local img{
+    margin-right: 40px;
+    color: #697172;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    position: absolute;
+    top: 14px;
+    right: 30px;
+    width: 15px;
+}
+
+header a {
+    text-decoration: none;
+    font-family: 'BrownBold';
+    font-size: 0.9em;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+section#criptografia {
+    background-image: url(./imgs/backgroundv2.jpg);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    font-family: 'BrownLight';
+    color: white;
+    height: 700px;
+}
+
+section#criptografia h1 {
+    padding: 50px 0px 20px 0px;
+}
+
+#menuEncrypt {
+    padding: 20px;
+}
+
+section#criptografia a.menuE {
+    margin: 60px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'BrownLight';
+    color: white;
+}
+
+section#criptografia a.menuE:hover {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    transition-duration: 0.07s;
+}
+
+section#criptografia textarea {
+    display: block;
+    margin: 10px auto;
+    width: 500px;
+    text-align: justify;
+    padding: 6px;
+    resize: none;
+}
+
+#inputKeyU {
+    display: block;
+    margin: 23px auto 34px auto;
+    width: 300px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+.keySet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+#inputKeyC {
+    width: 300px;
+    margin-left: 50px;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+#divCripto {
+    display: none;
+}
+
+#divCripto:target {
+    display: block;
+    margin-top: 30px;
+}
+
+#divUncripto {
+    display: none;
+}
+
+#divUncripto:target {
+    display: block;
+    margin-top: 30px;
+}
+
+section#login.open {
+    display: flex;
+}
+
+section#cadastro.open {
+    display: flex;
+}
+
+#btHideCad {
+    background-color: transparent;
+    border-style: none;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    background-image: url(./imgs/back.png);
+    background-size: cover;
+    width: 30px;
+    height: 30px;
+}
+
+#btHideCad:hover {
+    cursor: pointer;
+}
+
+.button {
+    display: block;
+    font-family: 'BrownBold';
+    color: white;
+    border: 1px solid white;
+    margin: 10px auto;
+    padding: 10px;
+    width: 150px;
+    background-color: transparent;
+}
+
+.button:hover {
+    color: rgb(97, 175, 238);
+    border: 1px solid rgb(50, 112, 163);
+    background-color: black;
+    cursor: pointer;
+    transition-duration: 0.1s;
+}
+
+#btnKey {
+    background-color: transparent;
+    height: 36px;
+    border-style: none;
+    padding-left: 20px;
+}
+
+#btnKey:hover {
+    cursor: pointer;
+    -webkit-filter: drop-shadow(5px 5px 5px #f8fc31ab);
+    filter: drop-shadow(5px 5px 5px #f2f53bab);
+    transition-duration: 0.2s;
+}
+
+div#resultado {
+    padding: 20px;
+    font-size: 1.2em;
+}
+
+section#login {
+    display: flex;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans', sans-serif;
+    align-items: center;
+    justify-content: center;
+    min-height: 101vh;
+    width: 100%;
+}
+
+.infoCad{
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.infoCad:hover{
+    color: rgb(36, 180, 0);
+    transition: 0.35s;
+}
+
+section#cadastro {
+    display: flex;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans', sans-serif;
+    align-items: center;
+    justify-content: center;
+    min-height: 101vh;
+    width: 100%;
+}
+
+div#btnLogin {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    right: 0px;
+}
+
+div#btnLogin a {
+    position: relative;
+    font-family: 'BrownBold';
+    top: 30px;
+}
+
+div.btnDeslogar {
+    display: block;
+    position: absolute;
+    right: 15px;
+}
+
+a.btnDeslogar {
+    padding: 10px;
+    text-decoration: none;
+    position: relative;
+    font-size: 0.83em;
+    font-family: 'BrownBold';
+    top: 25px;
+    color: rgb(211, 53, 53);
+    background-color: white;
+    border-radius: 18px;
+}
+
+a.btnDeslogar:hover {
+    background-color: rgb(207, 207, 207);
+    color: rgb(68, 68, 68);
+    transition: 0.15s;
+}
+
+.blocker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: ' ';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 300% 300%;
+    background-image: linear-gradient(-45deg, 
+                                    #200E78 0%, 
+                                    #576fe6 25%, 
+                                    #9844b7 51%, 
+                                    #a11146 100%
+                            );      
+    animation: AnimateBG 10s ease infinite;
+}
+
+@keyframes AnimateBG { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+section#login header {
+    background-image: url(./imgs/loginbg.jpg);
+    background-size: cover;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.400);
+    box-sizing: border-box;
+}
+
+section#cadastro header {
+    background-image: url(./imgs/loginbg.jpg);
+    background-size: cover;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    background-color: black;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.400);
+    box-sizing: border-box;
+}
+
+#campo-form{
+    width: 380px;
+    background: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 40px 30px 50px 30px;
+    margin: auto;
+    position: relative;
+}
+
+#campo-form header{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#campo-form form{
+    margin: 40px 0px;
+}
+
+#campo-form2{
+    width: 380px;
+    background: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 40px 30px 50px 30px;
+    margin: auto;
+    position: relative;
+}
+
+#campo-form2 header{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#campo-form2 form{
+    margin: 40px 0px;
+}
+
+form input, button{
+    height: 50px;
+    width: 70%;
+    outline: none;
+    padding: 0px 50px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    border-bottom-width: 2px;
+}
+
+form .campos.erros input{
+    border-color: #ff0000b3;
+}
+
+form .campos.erros textarea{
+    border-color: #ff0000b3;
+}
+
+#iCadastros .campos.erros input{
+    border-color: #ff0000b3;
+}
+
+form input::placeholder{
+    color: gray;
+    font-size: 17px;
+}
+
+form .campos{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+form .campos.shake{
+    animation: shake 0.3s ease-in-out;
+}
+
+#iCadastro .campos.shake{
+    animation: shake 0.3s ease-in-out;
+}
+
+
+#resLogin {
+    margin: 30px auto -50px auto;
+}
+
+#resCadastro {
+    margin: 30px auto -50px auto;
+}
+
+#painelEncrypt {
+    display: block;
+    max-height: 50%;
+}
+
+@keyframes shake {
+    0%, 100%{
+        margin-left: 0px;
+    }
+    20%, 80%{
+        margin-left: -12px;
+    }
+    40%, 60%{
+        margin-left: 12px;
+    }
+}
+
+@keyframes shake2 {
+    0%, 100%{
+        margin-left: 0px;
+    }
+    20%, 80%{
+        margin-left: -12px;
+    }
+    40%, 60%{
+        margin-left: 12px;
+    }
+}
+
+form .campos .area-input{
+    position: relative;
+}
+
+#iCadastros .campos .area-input{
+    position: relative;
+}
+
+form .campos span{
+    position: absolute;
+    top: 50%;
+    font-size: 18px;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+#iCadastros .campos span{
+    position: absolute;
+    top: 50%;
+    font-size: 18px;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+form .campos .icone{
+    left: 15px;
+    color: gray;
+}
+
+form .campos .icone-erro{
+    right: 15px;
+    color: rgba(255, 0, 0, 0.700);
+}
+
+#iCadastros .campos .icone-erro{
+    right: 15px;
+    color: rgba(255, 0, 0, 0.700);
+}
+
+form .campos .erro-msg{
+    margin-top: 5px;
+    color: rgba(255, 0, 0, 0.700);
+    text-align: left;
+    font-family: 'BrownBold';
+    font-size: 1.2em;
+}
+
+#iCadastros .campos .erro-msg{
+    margin-top: 5px;
+    color: rgba(255, 0, 0, 0.700);
+    text-align: left;
+}
+
+form .campos .erros{
+    display: none;
+}
+
+#iCadastros .campos .erros{
+    display: none;
+}
+
+form .campos.erros .erros{
+    display: block;
+}
+
+#iCadastros .campos.erros .erros{
+    display: block;
+}
+
+form input[type="submit"]{
+    margin-top: 30px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    background-color: rgb(17, 17, 17);
+    font-weight: 700;
+}
+
+#ititulo {
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+#iconteudo {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3em;
+    text-align: justify;
+}
+
+form input[type="submit"]:hover{
+    background-color: rgba(53, 182, 107, 0.856);
+    transition: 0.25s;
+    color: white;
+}
+
+form#formBusca {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+form#formBusca label {
+    text-align: center;
+    font-family: 'BrownBold';
+    padding: 10px;
+}
+
+form#formBusca input {
+    margin: 0px auto;
+    width: 500px;
+}
+
+form#formBusca #buscarTermo {
+    margin-top: 20px;
+}
+
+.noticias{
+    display: flex;
+    height: 700px;
+    background-image: url(./imgs/bgnews.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-shadow: 2px 2px #00000065;
+}
+
+#blockern {
+    position: static;
+    height: 700px;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: ' ';
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.96) , rgba(0, 0, 0, 0.99));
+}
+
+#buscarNoticias {
+    padding: 10px;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.99) , rgba(0, 0, 0, 0.95));
+    color: white;
+    text-shadow: 2px 2px #00000045;
+}
+
+.posts{
+    background-image: url(./imgs/bgnews.jpg);
+    background-size: auto;
+}
+
+.divartigos {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) , rgba(0, 0, 0, 0.85));
+}
+
+.artigos {
+    max-width: 700px;
+    display: block;
+    margin: auto;
+}
+
+.noticias h3{
+    text-align: center;
+    font-size: 35px;
+    margin: 30px;
+    font-family: 'BrownBold';
+    color: white;
+}
+
+.area-noticias{
+    height: 600px;
+    margin: 0 auto;
+    display: flex;
+}
+
+.form-noticias{
+    height: 400px;
+    margin: 0 auto; 
+}
+
+.form-noticias label{
+    font-size: 20px;
+    display: block;
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    color: white
+}
+
+.form-noticias #n-1 input{
+    display: block;
+    margin: auto;
+    height: 40px;
+    width: 600px;
+    border-radius: 5px;
+    padding: 0;
+    box-shadow: 10px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.form-noticias #n-2 textarea{
+    display: block;
+    margin: auto;
+    height: 200px;
+    width: 600px;
+    outline: none;
+    resize: none;
+    border-radius: 5px;
+    box-shadow: 10px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.form-noticias #n-3 input{
+    display: flex;
+    height: 50px;
+    width: 100px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+#buscarNoticias h2 {
+    font-family: 'Nunito Sans', sans-serif;
+    text-align: center;
+    font-size: 2.3em;
+}
+
+#inputTermo {
+    height: 35px;
+}
+
+#buscarTermo {
+    background-color: #576fe6;
+}
+
+#buscarTermo:hover {
+    background-color: #1c3094;
+    transition: 0.3s;
+}
+
+.posts article {
+    background-color: rgb(230, 230, 230);
+    border: 1px solid rgba(0, 0, 0, 0.521);
+    padding: 10px;
+}
+
+.posts article > h2 {
+    text-align: center;
+    padding: 5px;
+    font: 2.5em 'Oswald', sans-serif;
+    text-indent: 50px;
+}
+
+.posts article > p.content {
+    font-family: 'Quicksand', sans-serif;
+    text-align: justify;
+    text-indent: 2em;
+    margin: 15px auto;
+    padding: 15px;
+}
+
+.postBy {
+    color: rgb(30, 95, 40);
+    padding: 3px;
+    font-family: 'Quicksand', sans-serif;
+    text-align: right;
+}
+
+.imgNoticia{
+    max-width: 600px;
+    max-height: 500px;
+    display: flex;
+    margin: 20px auto;
+}
+
+#fileImg label{
+    font-size: 20px;
+    display: block;
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    color: white
+}
+
+#fileImg{
+    display: block;
+    margin: auto;
+}
+
+#fileImg input[type="file"]{
+    font-size: 0.85em;
+    display: flex;
+    width: auto;
+    height: auto;
+    margin: 0 auto 50px;
+    padding: 5px;
+    border: 2px solid gray;
+    background-color: white;
+    box-shadow: 10px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+div.admCadBlocker {
+    background-image: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    content: ' ';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a#criarAdmin {
+    font-family: 'BrownLight', Verdana, Geneva, Tahoma, sans-serif;
+    position: relative;
+    top: 20px;
+    left: 10px;
+    border-radius: 20px;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+a#criarAdmin:hover {
+    transition: 0.15s;
+    background-color: rgba(8, 255, 8, 0.582);
+}
+
+p#pWrnAdm {
+    padding: 10px;
+    margin-bottom: 10px;
+    color: rgb(44, 93, 255);
+}
+
+.searchResult {
+    background-color: white;
+    color: black;
+    max-width: 580px;
+    width: 100%;
+    margin: 0px auto 0 auto;
+    padding: 0px 10px;
+}
+
+hr {
+    border-top: none;
+    border: 1px solid lightgray;
+}
+
+p.pResults {
+    margin: 10px 0px;
+    text-shadow: none;
+    font-family: 'BrownLight', Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.1em;
+}
+
+a.aResults {
+    text-decoration: none;
+    color: rgb(20, 20, 20);
+}
+
+a.aResults:hover {
+    color: rgb(65, 160, 65);
+    text-decoration: underline;
+}
+
+@media(max-width: 1280px) {
+    main {
+        background-repeat: no-repeat;
+        background-position: top top;
+        position: relative;
+        background-size: 160%;
+        background-repeat: no-repeat;
+        overflow: hidden;
+    }
+
+    .imgNoticia{
+        max-width: 600px;
+    }
+}
+
+@media(max-width: 870px){
+    main {
+        background-repeat: no-repeat;
+        background-position: center top;
+        position: relative;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+    }
+
+    main > div > h2 {
+        font-size: 36px;
+    }
+
+    main > div > p {
+        font-size: 18px;
+    }
+
+    header.logiHeader, #navmenu, #navbtn {
+        display: none;
+    }
+
+    #logo {
+        background-image: url(./imgs/logo.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 90px;
+        display: inline-block;
+        margin: auto;
+        max-width: 183px;
+        min-width: 130px;
+    }   
+    
+    section#criptografia textarea {
+        width: 80%;
+    }
+
+    #menuEncrypt {
+        padding: 0px;
+    }
+
+    .form-noticias #n-1 input {
+        width: 500px;
+    }
+
+    .form-noticias #n-2 textarea {
+        width: 500px;
+    }
+
+    form#formBusca input {
+        width: 400px;
+    }
+
+    .searchResult {
+        width: 480px;   
+    }
+
+    .imgNoticia{
+        max-width: 400px;
+    }
+}
+
+@media(max-width: 600px){
+    section#criptografia a.menuE {
+        margin: 20px;
+        padding: 13px;
+    }
+
+    .form-noticias #n-1 input {
+        width: 300px;
+    }
+
+    .form-noticias #n-2 textarea {
+        width: 300px;
+    }
+
+    form#formBusca input {
+        width: 200px;
+    }
+
+    .searchResult {
+        width: 280px;   
+    }
+
+    .imgNoticia{
+        max-width: 250px;
+    }
+
+    a.btnDeslogar {
+        padding: 7px;
+    }
+
+    .noticias h3{ 
+        margin-top: 60px;
+    }
+
+    a#criarAdmin {
+        left: 20px;
+    }
+
+    #campo-form {
+        width: 300px;
+    }
+
+    #campo-form2 {
+        width: 300px;
+    }
+}
