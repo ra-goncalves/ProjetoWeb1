@@ -17,18 +17,6 @@ class Login extends Component {
     handleSubmitLogin = (event) => {
         event.preventDefault();
 
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/logar');
-        // xhr.setRequestHeader('Content-Type', 'application/json');
-        // xhr.onload = () => {
-        //   if (xhr.status === 200) {
-        //     this.state(JSON.parse(xhr.responseText));
-        //   } else {
-        //     console.log('Erro na requisição.');
-        //   }
-        // };
-        // const dadosEnviados = this.state;
-        // xhr.send(JSON.stringify(dadosEnviados));
         if (this.state.login === "") {
             this.setState({
                 loginErro: true
@@ -60,8 +48,7 @@ class Login extends Component {
                         loginRes: true
                     });
                     console.log('Login realizado com sucesso.');
-                    // Redirecionar para a página principal
-                    window.location.href = '/';
+                    window.location.href = '/home';
                 } else {
                     this.setState({
                         loginRes: true

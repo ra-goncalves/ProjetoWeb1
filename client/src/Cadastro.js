@@ -1,117 +1,104 @@
 import React, { Component } from 'react';
 
-export default class Login extends Component {
+class Cadastro extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            senha: '',
-            emailCad: '',
-            senhaCad: '',
-            loginErro: false,
-            cadastroErro: false
-        }
+            username: '',
+            login: '',
+            password: ''
+        };
     }
 
-    handleSubmitLogin = (event) => {
+    handleSubmit = (event) => {
         event.preventDefault();
-
-        if (this.state.email === "") {
-            this.setState({
-                loginErro: true
-            });
-            return;
-        } else {
-            this.checarEmail();
-        }
-
-        if (this.state.senha === "") {
-            this.setState({
-                loginErro: true
-            });
-            return;
-        } else {
-            this.setState({
-                loginErro: false
-            });
-        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/cadastrar_user');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                console.log('Usuário cadastrado!');
+                document.getElementById('resCadastro').innerHTML = 'Usuário cadastrado!';
+                window.location.href = '/';
+            } else {
+                console.log('Falha ao cadastrar.');
+                document.getElementById('resCadastro').innerHTML = 'Falha ao cadastrar.';
+            }
+        };
+        xhr.send(JSON.stringify(this.state));
     }
 
-    handleSubmitCadastro = (event) => {
-        event.preventDefault();
-
-        if (this.state.emailCad === "") {
-            this.setState({
-                cadastroErro: true
-            });
-            return;
-        } else {
-            this.checarEmailCad();
-        }
-
-        if (this.state.senhaCad === "") {
-            this.setState({
-                cadastroErro: true
-            });
-            return;
-        } else {
-            this.setState({
-                cadastroErro: false
-            });
-        }
-    }
-
-    handleChange = (event) => {
+    handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
         this.setState({
-            [event.target.name]: event.target.value
+            [name]: value
         });
     }
 
-
-    checarEmailCad() {
-        let pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-        if (!this.state.emailCad.match(pattern)) {
-            this.setState({
-                cadastroErro: true
-            });
-        } else {
-            this.setState({
-                cadastroErro: false
-            });
-        }
-    }
-
-
-
     render() {
         return (
-            <>
-                <section id="cadastro">
-                    <div className="blocker"></div>
-                    <div id="campo-form">
-                        <header>
-                        </header>
-                        <h2>Cadastro</h2>
-                        <form onSubmit={this.handleSubmitCadastro} id="iCadastros">
-                            <div className="campos email">
-                                <div className="area-input">
-                                    <input type="text" name="emailCad" value={this.state.emailCad} onChange={this.handleChange} placeholder="E-mail" />
-                                    <span className="icone material-symbols-outlined">mail</span>
-                                </div>
-                                {this.state.cadastroErro && <div className="erro-msg">O email tem que ser válido e não pode estar em branco</div>}
+            <section id="cadastro">
+                <div className="blocker"></div>
+                <div id="campo-form2">
+                    <header>
+                    </header>
+                    <h2>Cadastro</h2>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className="campos nome">
+                            <div className="area-input">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="iusername"
+                                    placeholder="Nome de usuário"
+                                    required
+                                    value={this.state.username}
+                                    onChange={this.handleInputChange}
+                                />
+                                <span className="icone material-symbols-outlined">person</span>
                             </div>
-                            <div className="campos senha">
-                                <div className="area-input">
-                                    <input type="password" name="senhaCad" value={this.state.senhaCad} onChange={this.handleChange} placeholder="Senha" />
-                                    <span className="icone material-symbols-outlined">lock</span>
-                                </div>
-                                {this.state.cadastroErro && <div className="erro-msg">A senha não pode estar em branco</div>}
+                        </div>
+                        <div className="campos email">
+                            <div className="area-input">
+                                <input
+                                    type="email"
+                                    name="login"
+                                    id="iemailCad"
+                                    placeholder="E-mail"
+                                    required
+                                    value={this.state.login}
+                                    onChange={this.handleInputChange}
+                                />
+                                <span className="icone material-symbols-outlined">mail</span>
+                                <span className="erros icone-erro material-symbols-outlined">error</span>
                             </div>
-                            <button type="submit">Cadastrar</button>
-                        </form>
-                    </div >
-                </section>
-            </>
+                            {this.state.cadErro && <div className="erros erro-msg">O email não pode estar em branco</div>}
+                        </div>
+                        <div className="campos senha">
+                            <div className="area-input">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="ipasswordCad"
+                                    placeholder="Senha"
+                                    required
+                                    value={this.state.password}
+                                    onChange={this.handleInputChange}
+                                />
+                                <span className="icone material-symbols-outlined">lock</span>
+                                <span className="erros icone-erro material-symbols-outlined">error</span>
+                            </div>
+                            <div className="erros erro-msg">A senha não pode estar em branco</div>
+                        </div>
+                        <input type="submit" value="Cadastrar" />
+                        <div id="resCadastro"></div>
+                    </form>
+                </div>
+            </section>
         );
     }
 }
+
+export default Cadastro;

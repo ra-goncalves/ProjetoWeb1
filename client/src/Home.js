@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Posts from './Posts';
 
 class Home extends Component {
     constructor(props) {
@@ -41,6 +42,7 @@ class Home extends Component {
                     image: null,
                     erros: [],
                 });
+                window.location.reload();
             } else {
                 const erros = JSON.parse(xhr.responseText).erros;
                 this.setState({ erros: erros });
@@ -51,55 +53,54 @@ class Home extends Component {
 
     render() {
         return (
-            <section className="noticias">
-                <div id="blockern">
-                    <div className="area-noticias">
-                        <form
-                            className="form-noticias"
-                            encType="multipart/form-data"
-                            onSubmit={this.handleSubmit}
-                        >
-                            <h3>Cadastrar uma notícia</h3>
-                            <div id="n-1" className="campos">
-                                <label htmlFor="ititulo">Título</label>
-                                <input
-                                    type="text"
-                                    id="ititulo"
-                                    name="titulo"
-                                    value={this.state.titulo}
-                                    onChange={this.handleInputChange}
-                                    required
-                                />
-                                {this.state.erros.includes("titulo") && (
-                                    <div className="erros erro-msg">O titulo não pode estar em branco</div>
-                                )}
-                            </div>
-                            <div id="n-2" className="campos">
-                                <label htmlFor="iconteudo">Conteúdo</label>
-                                <textarea
-                                    id="iconteudo"
-                                    name="conteudo"
-                                    rows="10"
-                                    cols="100"
-                                    value={this.state.conteudo}
-                                    onChange={this.handleInputChange}
-                                    required
-                                />
-                                {this.state.erros.includes("conteudo") && (
-                                    <div className="erros erro-msg">O conteúdo não pode estar em branco</div>
-                                )}
-                            </div>
-                            <div id="fileImg">
-                                <label htmlFor="txtImage">Imagem</label>
-                                <input type="file" name="image" onChange={this.handleInputChange} />
-                            </div>
-                            <div id="n-3">
-                                <input type="submit" value="Postar" />
-                            </div>
-                        </form>
+            <>
+                <section className="noticias">
+                    <div id="blockern">
+                        <div className="area-noticias">
+                            <form
+                                className="form-noticias"
+                                encType="multipart/form-data"
+                                onSubmit={this.handleSubmit}
+                            >
+                                <h3>Cadastrar uma notícia</h3>
+                                <div id="n-1" className="campos">
+                                    <label htmlFor="ititulo">Título</label>
+                                    <input
+                                        type="text"
+                                        id="ititulo"
+                                        name="titulo"
+                                        value={this.state.titulo}
+                                        onChange={this.handleInputChange}
+                                        required
+                                    />
+                                    {this.state.erros.includes("titulo") && (
+                                        <div className="erros erro-msg">O titulo não pode estar em branco</div>
+                                    )}
+                                </div>
+                                <div id="n-2" className="campos">
+                                    <label htmlFor="iconteudo">Conteúdo</label>
+                                    <textarea
+                                        id="iconteudo"
+                                        name="conteudo"
+                                        rows="10"
+                                        cols="100"
+                                        value={this.state.conteudo}
+                                        onChange={this.handleInputChange}
+                                        required
+                                    />
+                                    {this.state.erros.includes("conteudo") && (
+                                        <div className="erros erro-msg">O conteúdo não pode estar em branco</div>
+                                    )}
+                                </div>
+                                <div id="n-3">
+                                    <input type="submit" value="Postar" />
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+                <Posts />
+            </>
         );
     }
 }
