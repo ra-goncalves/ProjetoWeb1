@@ -4,19 +4,60 @@ let express = require('express'),
     Noticias = require('../models/Noticias'),
     bodyParser = require('body-parser'),
     upload = require('../models/Uploads'),
-    session = require('express-session')
+    session = require('express-session'),
+    amqp = require('amqplib')
 
 router.use(session({
     secret: 'supersecretsessionkey',
     resave: false,
     saveUninitialized: true,
-    cookie: {secure: false}
+    cookie: { secure: false }
 }))
 
 router.use(bodyParser.json());
 
+router.get('/fila', async (req, res) => {
+    try {
+        const connection = await amqp.connect('amqp://localhost');
+        const channel = await connection.createChannel();
+        const queueName = 'tarefa';
+        await channel.assertQueue(queueName);
+        const { messageCount } = await channel.checkQueue(queueName);
+
+        res.json({ queueSize: messageCount });
+
+        await channel.close();
+        await connection.close();
+    } catch (error) {
+        console.error('Erro ao obter o tamanho da fila:', error);
+        res.status(500).json({ error: 'Erro ao obter o tamanho da fila' });
+    }
+});
+
+router.post('/tarefa', async (req, res) => {
+    const task = req.body;
+
+    try {
+        const connection = await amqp.connect('amqp://localhost');
+        const channel = await connection.createChannel();
+        const queueName = 'tarefa';
+
+        await channel.assertQueue(queueName);
+        await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(task)));
+
+        console.log('Tarefa enviada para a fila:', task);
+
+        await channel.close();
+        await connection.close();
+    } catch (error) {
+        console.error('Erro ao enviar a tarefa para a fila:', error);
+    }
+
+    res.status(200).json({ message: 'Tarefa adicionada à fila do RabbitMQ' });
+});
+
 router.get('/', async (req, res) => {
-    if (req.session && req.session.login){
+    if (req.session && req.session.login) {
         if (req.session.userTypeAdmin) {
             const noticias = await Noticias.find()
             //console.log(req.session)
@@ -34,9 +75,9 @@ router.get('/', async (req, res) => {
 
 router.post('/cadastrar_user', async (req, res) => {
     const login = req.body.login,
-          password = req.body.password,
-          username = req.body.username,
-          userType = 'normal'
+        password = req.body.password,
+        username = req.body.username,
+        userType = 'normal'
 
     if (await Users.cadastrar(username, login, password, userType)) {
         console.log('Usuário cadastrado!')
@@ -50,9 +91,9 @@ router.post('/cadastrar_user', async (req, res) => {
 router.post('/cadastrar_admin', async (req, res) => {
     if (req.session && req.session.login && req.session.userTypeAdmin) {
         const login = req.body.login,
-        password = req.body.password,
-        username = req.body.username,
-        userType = 'admin'
+            password = req.body.password,
+            username = req.body.username,
+            userType = 'admin'
         if (await Users.cadastrar(username, login, password, userType)) {
             console.log('Admin cadastrado!')
             res.redirect('/')
@@ -67,25 +108,25 @@ router.post('/cadastrar_admin', async (req, res) => {
 
 router.post('/logar', async (req, res) => {
     const login = req.body.login,
-          password = req.body.password
+        password = req.body.password
 
     if (await Users.find(login, password)) {
-      req.session.login = login;
-      req.session.username = await Users.getUsername(login);
-      if (await Users.checkType(login) == 'admin') {
-        req.session.userTypeAdmin = true;
-      }
-      res.status(200).send({ success: true });
+        req.session.login = login;
+        req.session.username = await Users.getUsername(login);
+        if (await Users.checkType(login) == 'admin') {
+            req.session.userTypeAdmin = true;
+        }
+        res.status(200).send({ success: true });
     } else {
-      console.log('Erro ao logar.');
-      res.status(403).end();
+        console.log('Erro ao logar.');
+        res.status(403).end();
     }
-  });
+});
 
 router.post('/cadastrar_noticia', upload.single('image'), async (req, res) => {
     if (req.file) {
         image = req.file.filename
-    }else{
+    } else {
         image = "logo-noticia.png"
     }
 
@@ -113,13 +154,13 @@ router.get('/buscar_post', async (req, res) => {
 
 router.post('/noticiasJSON', async (req, res) => {
     console.log(req.body)
-    if (req.session && req.session.login){
+    if (req.session && req.session.login) {
         let termo = req.body.termo
         if (termo == '') {
             console.log('Campo de busca vazio')
             res.status(400)
         }
-    const noticias = await Noticias.searchBar(termo)
+        const noticias = await Noticias.searchBar(termo)
         res.json(noticias)
     }
 })
@@ -127,7 +168,7 @@ router.post('/noticiasJSON', async (req, res) => {
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
         console.log('Sessão destruída!')
-      })
+    })
     res.redirect('/')
 })
 
