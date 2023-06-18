@@ -5,6 +5,7 @@ import Login from "./Login";
 import Home from './Home';
 import Cadastro from './Cadastro';
 import Tarefa from './Tarefa';
+import WS from './WS';
 
 class App extends Component {
     render() {
@@ -15,6 +16,7 @@ class App extends Component {
                     <Route path='/home' element={<Home />}></Route>
                     <Route path='/cadastro' element={<Cadastro />}></Route>
                     <Route path='/tarefa' element={<Tarefa />}></Route>
+                    <Route path='/websocket' element={<WS />}></Route>
                 </Routes>
             </BrowserRouter>
         )

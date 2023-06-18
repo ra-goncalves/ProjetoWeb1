@@ -2,7 +2,8 @@ const MongoClient = require('mongodb').MongoClient;
 const dotenv = require('dotenv');
 dotenv.config();
 const MongoConnect = process.env.MONGO_URI;
-const client = new MongoClient(MongoConnect);
+
+const client = new MongoClient(MongoConnect, { maxPoolSize: 50 });
 const dbName = "Projeto_Web"
 
 module.exports = class Noticias {

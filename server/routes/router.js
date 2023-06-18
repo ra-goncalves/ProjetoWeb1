@@ -5,7 +5,8 @@ let express = require('express'),
     bodyParser = require('body-parser'),
     upload = require('../models/Uploads'),
     session = require('express-session'),
-    amqp = require('amqplib')
+    amqp = require('amqplib'),
+    WebSocket = require('ws')
 
 router.use(session({
     secret: 'supersecretsessionkey',
@@ -13,6 +14,33 @@ router.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }))
+  
+  const wss = new WebSocket.Server({ port: 5001 });
+  
+  let lastMessage = '';
+  
+  wss.on('connection', (ws) => {
+    console.log('Nova conexão WebSocket estabelecida.');
+  
+    ws.on('message', (message) => {
+      console.log('Mensagem recebida do cliente:', message);
+  
+      if (message !== lastMessage) {
+        lastMessage = message;
+        console.log('Enviando mensagem de volta para o cliente:', lastMessage);
+  
+        ws.send(lastMessage);
+      }
+    });
+  
+    if (lastMessage) {
+      ws.send(lastMessage);
+    }
+  
+    ws.on('close', () => {
+      console.log('Conexão WebSocket fechada.');
+    });
+  });
 
 router.use(bodyParser.json());
 
