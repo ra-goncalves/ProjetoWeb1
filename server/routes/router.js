@@ -14,7 +14,7 @@ router.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
-}))
+}));
 
 const wss = new WebSocket.Server({ port: 5001 });
 
@@ -109,6 +109,7 @@ router.post('/tarefa', async (req, res) => {
         await connection.close();
     } catch (error) {
         console.error('Erro ao enviar a tarefa para a fila:', error);
+        res.status(500).json({ error: 'Erro ao enviar a tarefa para a fila' });
     }
 
     res.status(200).json({ message: 'Tarefa adicionada à fila do RabbitMQ' });
@@ -128,6 +129,7 @@ router.get('/', async (req, res) => {
     } else {
         //console.log('\n -> Requisição de acesso não possui variável de session.login')
         //console.log(req.session)
+        res.status(403).send('Acesso não autorizado');
     }
 });
 
@@ -138,13 +140,12 @@ router.post('/cadastrar_user', async (req, res) => {
         userType = 'normal'
 
     if (await Users.cadastrar(username, login, password, userType)) {
-        console.log('Usuário cadastrado!')
-        res.status(200).send()
+        console.log('Usuário cadastrado!');
+        res.status(200).send();
     } else {
-        res.status(403)
-        res.end('Falha ao cadastrar.')
+        res.status(400).send('Falha ao cadastrar.');
     }
-})
+});
 
 router.post('/cadastrar_admin', async (req, res) => {
     if (req.session && req.session.login && req.session.userTypeAdmin) {
@@ -153,16 +154,15 @@ router.post('/cadastrar_admin', async (req, res) => {
             username = req.body.username,
             userType = 'admin'
         if (await Users.cadastrar(username, login, password, userType)) {
-            console.log('Admin cadastrado!')
-            res.redirect('/')
+            console.log('Admin cadastrado!');
+            res.redirect('/');
         } else {
-            res.end('Falha ao cadastrar.')
+            res.status(400).send('Falha ao cadastrar.');
         }
     } else {
-        res.status(403)
-        res.end()
+        res.status(403).end();
     }
-})
+});
 
 router.post('/logar', async (req, res) => {
     const login = req.body.login,
@@ -198,7 +198,7 @@ router.post('/cadastrar_noticia', upload.single('image'), async (req, res) => {
         await Noticias.insert(title, content, image)
         res.redirect('/')
     }
-})
+});
 
 router.get('/buscar_post', async (req, res) => {
     let termo = req.query.termo
@@ -221,13 +221,13 @@ router.post('/noticiasJSON', async (req, res) => {
         const noticias = await Noticias.searchBar(termo)
         res.json(noticias)
     }
-})
+});
 
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
-        console.log('Sessão destruída!')
-    })
-    res.redirect('/')
-})
+        console.log('Sessão destruída!');
+    });
+    res.redirect('/');
+});
 
-module.exports = router
+module.exports = router;
