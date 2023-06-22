@@ -6,6 +6,7 @@ import Home from './Home';
 import Cadastro from './Cadastro';
 import Tarefa from './Tarefa';
 import WS from './WS';
+import Redis from './Redis';
 
 class App extends Component {
     render() {
@@ -17,6 +18,7 @@ class App extends Component {
                     <Route path='/cadastro' element={<Cadastro />}></Route>
                     <Route path='/tarefa' element={<Tarefa />}></Route>
                     <Route path='/websocket' element={<WS />}></Route>
+                    <Route path='/redis' element={<Redis />}></Route>
                 </Routes>
             </BrowserRouter>
         )

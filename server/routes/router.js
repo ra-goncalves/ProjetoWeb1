@@ -6,7 +6,8 @@ let express = require('express'),
     upload = require('../models/Uploads'),
     session = require('express-session'),
     amqp = require('amqplib'),
-    WebSocket = require('ws')
+    WebSocket = require('ws'),
+    redisClient = require('../models/Redis');
 
 router.use(session({
     secret: 'supersecretsessionkey',
@@ -14,35 +15,64 @@ router.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }))
-  
-  const wss = new WebSocket.Server({ port: 5001 });
-  
-  let lastMessage = '';
-  
-  wss.on('connection', (ws) => {
+
+const wss = new WebSocket.Server({ port: 5001 });
+
+let lastMessage = '';
+
+wss.on('connection', (ws) => {
     console.log('Nova conexão WebSocket estabelecida.');
-  
+
     ws.on('message', (message) => {
-      console.log('Mensagem recebida do cliente:', message);
-  
-      if (message !== lastMessage) {
-        lastMessage = message;
-        console.log('Enviando mensagem de volta para o cliente:', lastMessage);
-  
-        ws.send(lastMessage);
-      }
+        console.log('Mensagem recebida do cliente:', message);
+
+        if (message !== lastMessage) {
+            lastMessage = message;
+            console.log('Enviando mensagem de volta para o cliente:', lastMessage);
+
+            ws.send(lastMessage);
+        }
     });
-  
+
     if (lastMessage) {
-      ws.send(lastMessage);
+        ws.send(lastMessage);
     }
-  
+
     ws.on('close', () => {
-      console.log('Conexão WebSocket fechada.');
+        console.log('Conexão WebSocket fechada.');
     });
-  });
+});
 
 router.use(bodyParser.json());
+
+router.post('/chave', async (req, res) => {
+    const { chave, valor } = req.body;
+
+    try {
+        await redisClient.set(chave, valor);
+        res.status(200).send('Chave armazenada com sucesso!');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao armazenar a chave no Redis');
+    }
+});
+
+router.get('/chave/:chave', async (req, res) => {
+    const { chave } = req.params;
+
+    try {
+        const valor = await redisClient.get(chave);
+
+        if (valor) {
+            res.status(200).send(valor);
+        } else {
+            res.status(404).send('Chave não encontrada!');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao buscar a chave no Redis');
+    }
+});
 
 router.get('/fila', async (req, res) => {
     try {
