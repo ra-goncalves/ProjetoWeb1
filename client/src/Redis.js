@@ -7,7 +7,7 @@ function Redis() {
   const [resultado, setResultado] = useState('');
 
   const handleArmazenarChave = () => {
-    fetch('/chave', {
+    fetch('/keys', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ function Redis() {
   };
 
   const handleBuscarChave = () => {
-    fetch(`/chave/${busca}`)
+    fetch(`/keys/${busca}`)
       .then((response) => {
         if (response.ok) {
           return response.text();

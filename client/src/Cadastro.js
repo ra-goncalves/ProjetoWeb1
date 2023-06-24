@@ -13,7 +13,7 @@ class Cadastro extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/cadastrar_user');
+        xhr.open('POST', '/users');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {
             if (xhr.status === 200) {

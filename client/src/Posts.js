@@ -21,7 +21,7 @@ class Posts extends Component {
       return [];
     }
     try {
-      const response = await fetch('/noticiasJSON', {
+      const response = await fetch('/news-list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
         body: JSON.stringify({ termo: termo })
@@ -45,7 +45,7 @@ class Posts extends Component {
 
   componentDidMount = async () => {
     try {
-      const response = await fetch('/buscar_post');
+      const response = await fetch('/posts');
       const noticias = await response.json();
       this.setState({ noticias: noticias });
     } catch (error) {

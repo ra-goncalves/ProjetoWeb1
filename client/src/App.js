@@ -15,8 +15,8 @@ class App extends Component {
                 <Routes>
                     <Route exact path='/' element={<Login />}></Route>
                     <Route path='/home' element={<Home />}></Route>
-                    <Route path='/cadastro' element={<Cadastro />}></Route>
-                    <Route path='/tarefa' element={<Tarefa />}></Route>
+                    <Route path='/users' element={<Cadastro />}></Route>
+                    <Route path='/tasks' element={<Tarefa />}></Route>
                     <Route path='/websocket' element={<WS />}></Route>
                     <Route path='/redis' element={<Redis />}></Route>
                 </Routes>

@@ -38,7 +38,7 @@ class Login extends Component {
         }
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/logar');
+        xhr.open('POST', '/login');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -113,7 +113,7 @@ class Login extends Component {
                             {this.state.loginRes && <div className="erros.erro-msg">Login ou senha invalido</div>}
                             <button type="submit">Login</button>
                             <div className="infoCad">
-                                <Link className="infoCad" to={"/cadastro"}>Não tem cadastro? Cadastre-se</Link>
+                                <Link className="infoCad" to={"/users"}>Não tem cadastro? Cadastre-se</Link>
                             </div>
                         </form>
                     </div >

@@ -18,7 +18,7 @@ class Tarefa extends Component {
         event.preventDefault();
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/tarefa');
+        xhr.open('POST', '/tasks');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -46,7 +46,7 @@ class Tarefa extends Component {
 
     getQueueSize = async () => {
         try {
-            const response = await fetch('/fila');
+            const response = await fetch('/queues');
             const data = await response.json();
             this.setState({ queueSize: data.queueSize });
         } catch (error) {

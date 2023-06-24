@@ -45,7 +45,7 @@ wss.on('connection', (ws) => {
 
 router.use(bodyParser.json());
 
-router.post('/chave', async (req, res) => {
+router.post('/keys', async (req, res) => {
     const { chave, valor } = req.body;
 
     try {
@@ -57,7 +57,7 @@ router.post('/chave', async (req, res) => {
     }
 });
 
-router.get('/chave/:chave', async (req, res) => {
+router.get('/keys/:keys', async (req, res) => {
     const { chave } = req.params;
 
     try {
@@ -74,7 +74,7 @@ router.get('/chave/:chave', async (req, res) => {
     }
 });
 
-router.get('/fila', async (req, res) => {
+router.get('/queues', async (req, res) => {
     try {
         const connection = await amqp.connect('amqp://localhost');
         const channel = await connection.createChannel();
@@ -92,7 +92,7 @@ router.get('/fila', async (req, res) => {
     }
 });
 
-router.post('/tarefa', async (req, res) => {
+router.post('/tasks', async (req, res) => {
     const task = req.body;
 
     try {
@@ -133,7 +133,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/cadastrar_user', async (req, res) => {
+router.post('/users', async (req, res) => {
     const login = req.body.login,
         password = req.body.password,
         username = req.body.username,
@@ -147,7 +147,7 @@ router.post('/cadastrar_user', async (req, res) => {
     }
 });
 
-router.post('/cadastrar_admin', async (req, res) => {
+router.post('/admin', async (req, res) => {
     if (req.session && req.session.login && req.session.userTypeAdmin) {
         const login = req.body.login,
             password = req.body.password,
@@ -164,7 +164,7 @@ router.post('/cadastrar_admin', async (req, res) => {
     }
 });
 
-router.post('/logar', async (req, res) => {
+router.post('/login', async (req, res) => {
     const login = req.body.login,
         password = req.body.password
 
@@ -181,7 +181,7 @@ router.post('/logar', async (req, res) => {
     }
 });
 
-router.post('/cadastrar_noticia', upload.single('image'), async (req, res) => {
+router.post('/news', upload.single('image'), async (req, res) => {
     if (req.file) {
         image = req.file.filename
     } else {
@@ -200,7 +200,7 @@ router.post('/cadastrar_noticia', upload.single('image'), async (req, res) => {
     }
 });
 
-router.get('/buscar_post', async (req, res) => {
+router.get('/posts', async (req, res) => {
     let termo = req.query.termo
     if (termo == '') {
         console.log('Campo de busca vazio')
@@ -210,7 +210,7 @@ router.get('/buscar_post', async (req, res) => {
     res.json(noticias)
 })
 
-router.post('/noticiasJSON', async (req, res) => {
+router.post('/news-list', async (req, res) => {
     console.log(req.body)
     if (req.session && req.session.login) {
         let termo = req.body.termo

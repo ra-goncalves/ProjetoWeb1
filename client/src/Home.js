@@ -32,7 +32,7 @@ class Home extends Component {
         formData.append("image", this.state.image);
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/cadastrar_noticia");
+        xhr.open("POST", "/news");
         xhr.onload = () => {
             if (xhr.status === 200) {
                 alert("Notícia cadastrada com sucesso!");
