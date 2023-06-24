@@ -249,14 +249,26 @@ router.post('/news', upload.single('image'), sessionChecker, async (req, res) =>
 });
 
 router.get('/posts', sessionChecker, async (req, res) => {
-    let termo = req.sanitize(req.query.termo);
-    if (termo == '') {
-        logger.warn('Campo de busca vazio');
-        res.status(400).json({ error: 'Campo de busca vazio' });
-    } else {
-        const noticias = await Noticias.find(termo);
-        logger.info('Resultado da busca de posts:', noticias);
-        res.json(noticias);
+    const cacheKey = 'posts';
+
+    try {
+        const result = await redisClient.get(cacheKey);
+
+        if (result !== null) {
+            const cachedResult = JSON.parse(result);
+            logger.info('Resultado da busca de posts (cache):', cachedResult);
+            res.json(cachedResult);
+        } else {
+            const noticias = await Noticias.find();
+            logger.info('Resultado da busca de posts:', noticias);
+
+            await redisClient.set(cacheKey, JSON.stringify(noticias));
+
+            res.json(noticias);
+        }
+    } catch (error) {
+        logger.error('Ocorreu um erro ao acessar o cache do Redis:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
 
