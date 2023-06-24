@@ -7,7 +7,27 @@ let express = require('express'),
     session = require('express-session'),
     amqp = require('amqplib'),
     WebSocket = require('ws'),
-    redisClient = require('../models/Redis');
+    redisClient = require('../models/Redis'),
+    morgan = require('morgan'),
+    winston = require('winston'),
+    fs = require('fs');
+
+const logDirectory = './logs';
+if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory);
+}
+
+const logger = winston.createLogger({
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: `${logDirectory}/error.log`, level: 'error' }),
+        new winston.transports.File({ filename: `${logDirectory}/combined.log` })
+    ],
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    )
+});
 
 const sessionChecker = (req, res, next) => {
     if (req.session && req.session.login) {
@@ -24,19 +44,29 @@ router.use(session({
     cookie: { secure: false }
 }));
 
+const morganLogger = morgan('combined', {
+    stream: {
+        write: function (message) {
+            logger.info(message.trim());
+        }
+    }
+});
+
+router.use(morganLogger);
+
 const wss = new WebSocket.Server({ port: 5001 });
 
 let lastMessage = '';
 
 wss.on('connection', (ws) => {
-    console.log('Nova conexão WebSocket estabelecida.');
+    logger.info('Nova conexão WebSocket estabelecida.');
 
     ws.on('message', (message) => {
-        console.log('Mensagem recebida do cliente:', message);
+        logger.info('Mensagem recebida do cliente:', message);
 
         if (message !== lastMessage) {
             lastMessage = message;
-            console.log('Enviando mensagem de volta para o cliente:', lastMessage);
+            logger.info('Enviando mensagem de volta para o cliente:', lastMessage);
 
             ws.send(lastMessage);
         }
@@ -47,7 +77,7 @@ wss.on('connection', (ws) => {
     }
 
     ws.on('close', () => {
-        console.log('Conexão WebSocket fechada.');
+        logger.info('Conexão WebSocket fechada.');
     });
 });
 
@@ -58,9 +88,10 @@ router.post('/keys', sessionChecker, async (req, res) => {
 
     try {
         await redisClient.set(chave, valor);
+        logger.info('Chave armazenada com sucesso!');
         res.status(200).send('Chave armazenada com sucesso!');
     } catch (error) {
-        console.error(error);
+        logger.error('Erro ao armazenar a chave no Redis:', error);
         res.status(500).send('Erro ao armazenar a chave no Redis');
     }
 });
@@ -72,12 +103,14 @@ router.get('/keys/:keys', sessionChecker, async (req, res) => {
         const valor = await redisClient.get(chave);
 
         if (valor) {
+            logger.info('Chave encontrada:', valor);
             res.status(200).send(valor);
         } else {
+            logger.info('Chave não encontrada!');
             res.status(404).send('Chave não encontrada!');
         }
     } catch (error) {
-        console.error(error);
+        logger.error('Erro ao buscar a chave no Redis:', error);
         res.status(500).send('Erro ao buscar a chave no Redis');
     }
 });
@@ -95,7 +128,7 @@ router.get('/queues', sessionChecker, async (req, res) => {
         await channel.close();
         await connection.close();
     } catch (error) {
-        console.error('Erro ao obter o tamanho da fila:', error);
+        logger.error('Erro ao obter o tamanho da fila:', error);
         res.status(500).json({ error: 'Erro ao obter o tamanho da fila' });
     }
 });
@@ -111,12 +144,12 @@ router.post('/tasks', sessionChecker, async (req, res) => {
         await channel.assertQueue(queueName);
         await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(task)));
 
-        console.log('Tarefa enviada para a fila:', task);
+        logger.info('Tarefa enviada para a fila:', task);
 
         await channel.close();
         await connection.close();
     } catch (error) {
-        console.error('Erro ao enviar a tarefa para a fila:', error);
+        logger.error('Erro ao enviar a tarefa para a fila:', error);
         res.status(500).json({ error: 'Erro ao enviar a tarefa para a fila' });
     }
 
@@ -148,9 +181,10 @@ router.post('/users', async (req, res) => {
         userType = 'normal';
 
     if (await Users.cadastrar(username, login, password, userType)) {
-        console.log('Usuário cadastrado!');
+        logger.info('Usuário cadastrado!');
         res.status(200).send();
     } else {
+        logger.error('Falha ao cadastrar usuário.');
         res.status(400).send('Falha ao cadastrar.');
     }
 });
@@ -162,9 +196,10 @@ router.post('/admin', sessionChecker, async (req, res) => {
         userType = 'admin';
 
     if (await Users.cadastrar(username, login, password, userType)) {
-        console.log('Admin cadastrado!');
+        logger.info('Admin cadastrado!');
         res.redirect('/');
     } else {
+        logger.error('Falha ao cadastrar admin.');
         res.status(400).send('Falha ao cadastrar.');
     }
 });
@@ -179,9 +214,10 @@ router.post('/login', async (req, res) => {
         if (await Users.checkType(login) == 'admin') {
             req.session.userTypeAdmin = true;
         }
+        logger.info('Usuário logado:', login);
         res.status(200).send({ success: true });
     } else {
-        console.log('Erro ao logar.');
+        logger.error('Erro ao logar.');
         res.status(403).end();
     }
 });
@@ -197,10 +233,12 @@ router.post('/news', upload.single('image'), sessionChecker, async (req, res) =>
         content = req.body.conteudo;
 
     if (!req.body || title == '' || content == '') {
+        logger.warn('Campo de busca vazio');
         res.status(400);
         res.end();
     } else {
         await Noticias.insert(title, content, image);
+        logger.info('Notícia inserida:', { title, content, image });
         res.redirect('/');
     }
 });
@@ -208,27 +246,29 @@ router.post('/news', upload.single('image'), sessionChecker, async (req, res) =>
 router.get('/posts', sessionChecker, async (req, res) => {
     let termo = req.query.termo;
     if (termo == '') {
-        console.log('Campo de busca vazio');
+        logger.warn('Campo de busca vazio');
         res.status(400).json({ error: 'Campo de busca vazio' });
     }
     const noticias = await Noticias.find(termo);
+    logger.info('Resultado da busca de posts:', noticias);
     res.json(noticias);
 });
 
 router.post('/news-list', sessionChecker, async (req, res) => {
-    console.log(req.body);
+    logger.info(req.body);
     let termo = req.body.termo;
     if (termo == '') {
-        console.log('Campo de busca vazio');
+        logger.warn('Campo de busca vazio');
         res.status(400);
     }
     const noticias = await Noticias.searchBar(termo);
+    logger.info('Resultado da busca de notícias:', noticias);
     res.json(noticias);
 });
 
 router.get('/logout', (req, res) => {
     req.session.destroy(() => {
-        console.log('Sessão destruída!');
+        logger.info('Sessão destruída!');
     });
     res.redirect('/');
 });
