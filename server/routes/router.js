@@ -9,6 +9,14 @@ let express = require('express'),
     WebSocket = require('ws'),
     redisClient = require('../models/Redis');
 
+const sessionChecker = (req, res, next) => {
+    if (req.session && req.session.login) {
+        next();
+    } else {
+        res.status(403).send('Acesso não autorizado');
+    }
+};
+
 router.use(session({
     secret: 'supersecretsessionkey',
     resave: false,
@@ -45,7 +53,7 @@ wss.on('connection', (ws) => {
 
 router.use(bodyParser.json());
 
-router.post('/keys', async (req, res) => {
+router.post('/keys', sessionChecker, async (req, res) => {
     const { chave, valor } = req.body;
 
     try {
@@ -57,7 +65,7 @@ router.post('/keys', async (req, res) => {
     }
 });
 
-router.get('/keys/:keys', async (req, res) => {
+router.get('/keys/:keys', sessionChecker, async (req, res) => {
     const { chave } = req.params;
 
     try {
@@ -74,7 +82,7 @@ router.get('/keys/:keys', async (req, res) => {
     }
 });
 
-router.get('/queues', async (req, res) => {
+router.get('/queues', sessionChecker, async (req, res) => {
     try {
         const connection = await amqp.connect('amqp://localhost');
         const channel = await connection.createChannel();
@@ -92,7 +100,7 @@ router.get('/queues', async (req, res) => {
     }
 });
 
-router.post('/tasks', async (req, res) => {
+router.post('/tasks', sessionChecker, async (req, res) => {
     const task = req.body;
 
     try {
@@ -137,7 +145,7 @@ router.post('/users', async (req, res) => {
     const login = req.body.login,
         password = req.body.password,
         username = req.body.username,
-        userType = 'normal'
+        userType = 'normal';
 
     if (await Users.cadastrar(username, login, password, userType)) {
         console.log('Usuário cadastrado!');
@@ -147,26 +155,23 @@ router.post('/users', async (req, res) => {
     }
 });
 
-router.post('/admin', async (req, res) => {
-    if (req.session && req.session.login && req.session.userTypeAdmin) {
-        const login = req.body.login,
-            password = req.body.password,
-            username = req.body.username,
-            userType = 'admin'
-        if (await Users.cadastrar(username, login, password, userType)) {
-            console.log('Admin cadastrado!');
-            res.redirect('/');
-        } else {
-            res.status(400).send('Falha ao cadastrar.');
-        }
+router.post('/admin', sessionChecker, async (req, res) => {
+    const login = req.body.login,
+        password = req.body.password,
+        username = req.body.username,
+        userType = 'admin';
+
+    if (await Users.cadastrar(username, login, password, userType)) {
+        console.log('Admin cadastrado!');
+        res.redirect('/');
     } else {
-        res.status(403).end();
+        res.status(400).send('Falha ao cadastrar.');
     }
 });
 
 router.post('/login', async (req, res) => {
     const login = req.body.login,
-        password = req.body.password
+        password = req.body.password;
 
     if (await Users.find(login, password)) {
         req.session.login = login;
@@ -181,46 +186,44 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.post('/news', upload.single('image'), async (req, res) => {
+router.post('/news', upload.single('image'), sessionChecker, async (req, res) => {
     if (req.file) {
-        image = req.file.filename
+        image = req.file.filename;
     } else {
-        image = "logo-noticia.png"
+        image = "logo-noticia.png";
     }
 
     let title = req.body.titulo,
-        content = req.body.conteudo
+        content = req.body.conteudo;
 
     if (!req.body || title == '' || content == '') {
-        res.status(400)
-        res.end()
+        res.status(400);
+        res.end();
     } else {
-        await Noticias.insert(title, content, image)
-        res.redirect('/')
+        await Noticias.insert(title, content, image);
+        res.redirect('/');
     }
 });
 
-router.get('/posts', async (req, res) => {
-    let termo = req.query.termo
+router.get('/posts', sessionChecker, async (req, res) => {
+    let termo = req.query.termo;
     if (termo == '') {
-        console.log('Campo de busca vazio')
-        res.status(400).json({ error: 'Campo de busca vazio' })
+        console.log('Campo de busca vazio');
+        res.status(400).json({ error: 'Campo de busca vazio' });
     }
-    const noticias = await Noticias.find(termo)
-    res.json(noticias)
-})
+    const noticias = await Noticias.find(termo);
+    res.json(noticias);
+});
 
-router.post('/news-list', async (req, res) => {
-    console.log(req.body)
-    if (req.session && req.session.login) {
-        let termo = req.body.termo
-        if (termo == '') {
-            console.log('Campo de busca vazio')
-            res.status(400)
-        }
-        const noticias = await Noticias.searchBar(termo)
-        res.json(noticias)
+router.post('/news-list', sessionChecker, async (req, res) => {
+    console.log(req.body);
+    let termo = req.body.termo;
+    if (termo == '') {
+        console.log('Campo de busca vazio');
+        res.status(400);
     }
+    const noticias = await Noticias.searchBar(termo);
+    res.json(noticias);
 });
 
 router.get('/logout', (req, res) => {
