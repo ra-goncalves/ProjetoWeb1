@@ -10,7 +10,8 @@ let express = require('express'),
     redisClient = require('../models/Redis'),
     morgan = require('morgan'),
     winston = require('winston'),
-    fs = require('fs');
+    fs = require('fs'),
+    expressSanitizer = require('express-sanitizer');
 
 const logDirectory = './logs';
 if (!fs.existsSync(logDirectory)) {
@@ -36,6 +37,10 @@ const sessionChecker = (req, res, next) => {
         res.status(403).send('Acesso não autorizado');
     }
 };
+
+router.use(expressSanitizer());
+
+router.use(bodyParser.json());
 
 router.use(session({
     secret: 'supersecretsessionkey',
@@ -175,9 +180,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/users', async (req, res) => {
-    const login = req.body.login,
-        password = req.body.password,
-        username = req.body.username,
+    const login = req.sanitize(req.body.login),
+        password = req.sanitize(req.body.password),
+        username = req.sanitize(req.body.username),
         userType = 'normal';
 
     if (await Users.cadastrar(username, login, password, userType)) {
@@ -190,9 +195,9 @@ router.post('/users', async (req, res) => {
 });
 
 router.post('/admin', sessionChecker, async (req, res) => {
-    const login = req.body.login,
-        password = req.body.password,
-        username = req.body.username,
+    const login = req.sanitize(req.body.login),
+        password = req.sanitize(req.body.password),
+        username = req.sanitize(req.body.username),
         userType = 'admin';
 
     if (await Users.cadastrar(username, login, password, userType)) {
@@ -205,8 +210,8 @@ router.post('/admin', sessionChecker, async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const login = req.body.login,
-        password = req.body.password;
+    const login = req.sanitize(req.body.login),
+        password = req.sanitize(req.body.password);
 
     if (await Users.find(login, password)) {
         req.session.login = login;
@@ -229,8 +234,8 @@ router.post('/news', upload.single('image'), sessionChecker, async (req, res) =>
         image = "logo-noticia.png";
     }
 
-    let title = req.body.titulo,
-        content = req.body.conteudo;
+    let title = req.sanitize(req.body.titulo),
+        content = req.sanitize(req.body.conteudo);
 
     if (!req.body || title == '' || content == '') {
         logger.warn('Campo de busca vazio');
@@ -244,19 +249,20 @@ router.post('/news', upload.single('image'), sessionChecker, async (req, res) =>
 });
 
 router.get('/posts', sessionChecker, async (req, res) => {
-    let termo = req.query.termo;
+    let termo = req.sanitize(req.query.termo);
     if (termo == '') {
         logger.warn('Campo de busca vazio');
         res.status(400).json({ error: 'Campo de busca vazio' });
+    } else {
+        const noticias = await Noticias.find(termo);
+        logger.info('Resultado da busca de posts:', noticias);
+        res.json(noticias);
     }
-    const noticias = await Noticias.find(termo);
-    logger.info('Resultado da busca de posts:', noticias);
-    res.json(noticias);
 });
 
 router.post('/news-list', sessionChecker, async (req, res) => {
     logger.info(req.body);
-    let termo = req.body.termo;
+    let termo = req.sanitize(req.body.termo);
     if (termo == '') {
         logger.warn('Campo de busca vazio');
         res.status(400);
